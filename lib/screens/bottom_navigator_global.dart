@@ -30,7 +30,7 @@ class _BottomNavigatorGlobalState extends State<BottomNavigatorGlobal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: _widgetOptions[_selectedIndex]),
+      body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(

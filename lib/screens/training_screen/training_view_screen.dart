@@ -8,15 +8,32 @@ class TrainingViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Navigator(
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute(
+          builder: (context) => const TrainingViewContent(),
+        );
+      },
+    );
+  }
+}
+
+class TrainingViewContent extends StatelessWidget {
+  const TrainingViewContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: GlobalAppBar(
         title: "Training",
         actions: [
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const SavedViewScreen();
-              }));
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SavedViewScreen(),
+                ),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 16),

@@ -14,6 +14,7 @@ ThemeData buildAppTheme() {
       onSecondary: Colors.white,
       onSurface: Color(0xFF8592A6),
     ),
+    
 
     // BottomNavigationBar
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
