@@ -7,6 +7,7 @@ class CustomTextFieldCardWidget extends StatelessWidget {
   final VoidCallback onTap;
   final String inputText;
   final String suffixText;
+  final double cardHeight;
 
   const CustomTextFieldCardWidget({
     super.key,
@@ -15,13 +16,14 @@ class CustomTextFieldCardWidget extends StatelessWidget {
     required this.onTap,
     required this.inputText,
     required this.suffixText,
+    this.cardHeight = 64,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 64,
+      height: cardHeight,
       child: GestureDetector(
         onTap: onTap,
         child: Container(
