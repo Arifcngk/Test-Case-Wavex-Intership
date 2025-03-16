@@ -20,7 +20,7 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: const TextStyle(color: Colors.black),
       ),
       actions: actions,
-      leading: leading,
+      leading: leading ,
       backgroundColor: Colors.white,
       elevation: 0,
       iconTheme: Theme.of(context).appBarTheme.iconTheme,

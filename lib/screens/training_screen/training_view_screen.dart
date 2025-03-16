@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:test_case_wavex_intership/screens/app_bar_global.dart';
+import 'package:test_case_wavex_intership/screens/training_screen/row_screen/row_view_sceen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/saved_screen/saved_view_screen.dart';
+import 'package:test_case_wavex_intership/screens/training_screen/single_time_screen/single_time_view_screen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/widget/list_widget.dart';
 
 class TrainingViewScreen extends StatelessWidget {
@@ -8,13 +10,7 @@ class TrainingViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      onGenerateRoute: (settings) {
-        return MaterialPageRoute(
-          builder: (context) => const TrainingViewContent(),
-        );
-      },
-    );
+    return const TrainingViewContent();
   }
 }
 
@@ -47,36 +43,52 @@ class TrainingViewContent extends StatelessWidget {
           )
         ],
       ),
-      body: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
-          child: Column(
-            children: [
-              ListTileWidget(
-                title: "Just Row",
-                iconName: "stroge.png",
-                iconSize: 18,
-                bgCircleColor: Color.fromRGBO(23, 178, 106, 0.12),
-              ),
-              SizedBox(height: 16),
-              ListTileWidget(
-                title: "Just Row",
-                iconName: "clock.png",
-                bgCircleColor: Color.fromRGBO(142, 0, 47, 0.12),
-              ),
-              SizedBox(height: 16),
-              ListTileWidget(
-                title: "Just Row",
-                iconName: "sound.png",
-                bgCircleColor: Color.fromRGBO(255, 135, 36, 0.12),
-              ),
-              SizedBox(height: 16),
-              ListTileWidget(
-                title: "Just Row",
-                iconName: "textalign.png",
-                bgCircleColor: Color.fromRGBO(26, 72, 116, 0.12),
-              ),
-            ],
-          )),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+        child: Column(
+          children: [
+            ListTileWidget(
+              title: "Just Row",
+              iconName: "stroge.png",
+              iconSize: 18,
+              bgCircleColor: const Color.fromRGBO(23, 178, 106, 0.12),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    fullscreenDialog: true,
+                    builder: (context) => const RowViewSceen(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            ListTileWidget(
+              title: "Single Time",
+              iconName: "clock.png",
+              bgCircleColor: Color.fromRGBO(142, 0, 47, 0.12),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const SingleTimeViewScreen(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            const ListTileWidget(
+              title: "Varible Intervals",
+              iconName: "sound.png",
+              bgCircleColor: Color.fromRGBO(255, 135, 36, 0.12),
+            ),
+            const SizedBox(height: 16),
+            const ListTileWidget(
+              title: "Constant Intervals",
+              iconName: "textalign.png",
+              bgCircleColor: Color.fromRGBO(26, 72, 116, 0.12),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
