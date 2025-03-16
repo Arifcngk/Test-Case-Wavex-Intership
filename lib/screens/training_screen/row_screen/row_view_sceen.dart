@@ -1,45 +1,79 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/row_screen/widget/custom_card_widget.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/training_view_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 class RowViewSceen extends StatefulWidget {
-  const RowViewSceen({super.key});
+  final String? time;
+
+  const RowViewSceen({super.key, this.time});
 
   @override
   State<RowViewSceen> createState() => _RowViewSceenState();
 }
 
 class _RowViewSceenState extends State<RowViewSceen> {
-  int _second = 0;
+  late int _second;
   bool _isTimerPaused = false;
   late Timer _timer;
+  bool _isCountingUp = false;
+
   @override
   void initState() {
     super.initState();
+    _second = widget.time != null ? _parseTimeToSeconds(widget.time!) : 0;
+    _isCountingUp = widget.time == null;
     _startTimer();
-  }
-
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        _second++;
-      });
-    });
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
   }
 
   @override
   void dispose() {
-    super.dispose();
     _timer.cancel();
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp]); // Eski yönlendirmeyi geri yükle
+    super.dispose();
+  }
+
+  int _parseTimeToSeconds(String time) {
+    final parts = time.split(':');
+    if (parts.length != 3) return 0;
+    final hours = int.parse(parts[0]);
+    final minutes = int.parse(parts[1]);
+    final seconds = int.parse(parts[2]);
+    return (hours * 3600) + (minutes * 60) + seconds;
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!_isTimerPaused) {
+        setState(() {
+          if (_isCountingUp) {
+            _second++;
+          } else {
+            if (_second > 0) {
+              _second--;
+            } else {
+              _timer.cancel();
+            }
+          }
+        });
+      }
+    });
   }
 
   String _formatTimer(int second) {
-    final minutes = (second ~/ 60).toString().padLeft(2, '0');
+    final hours = (second ~/ 3600).toString().padLeft(2, '0');
+    final minutes = ((second % 3600) ~/ 60).toString().padLeft(2, '0');
     final secs = (second % 60).toString().padLeft(2, '0');
-    return '$minutes:$secs';
+    return '$hours:$minutes:$secs';
   }
 
   @override
@@ -48,13 +82,11 @@ class _RowViewSceenState extends State<RowViewSceen> {
       backgroundColor: const Color(0xFF001C37),
       body: Stack(
         children: [
-          // Mevcut içerik
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 82, vertical: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                // Sol tarafa yerleştirilen Container
                 Column(
                   children: [
                     const Spacer(),
@@ -83,7 +115,6 @@ class _RowViewSceenState extends State<RowViewSceen> {
                   ],
                 ),
                 const SizedBox(width: 8),
-                // Sağ Taraf Container
                 const Column(
                   children: [
                     Spacer(),
@@ -122,7 +153,6 @@ class _RowViewSceenState extends State<RowViewSceen> {
               ],
             ),
           ),
-          // Sol üst köşeye pause ikonu
           Positioned(
             top: 42,
             left: 63,
@@ -144,7 +174,7 @@ class _RowViewSceenState extends State<RowViewSceen> {
                     'assets/icon/pause.png',
                     width: 24,
                     height: 24,
-                    color: const Color(0XFF001C37),
+                    color: const Color(0xFF001C37),
                   ),
                 ),
               ),
@@ -167,24 +197,26 @@ class _RowViewSceenState extends State<RowViewSceen> {
               width: 203,
               height: 62,
               child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF8724),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      )),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => TrainingViewScreen(),
-                    ));
-                  },
-                  child: Text(
-                    "Save and Exit",
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  )),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF8724),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const TrainingViewScreen(),
+                  ));
+                },
+                child: Text(
+                  "Save and Exit",
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
             ),
           ),
         );

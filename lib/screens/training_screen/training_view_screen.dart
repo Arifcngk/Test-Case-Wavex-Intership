@@ -65,7 +65,7 @@ class TrainingViewContent extends StatelessWidget {
             ListTileWidget(
               title: "Single Time",
               iconName: "clock.png",
-              bgCircleColor: Color.fromRGBO(142, 0, 47, 0.12),
+              bgCircleColor: const Color.fromRGBO(142, 0, 47, 0.12),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(

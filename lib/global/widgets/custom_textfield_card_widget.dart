@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextFieldCardWidget extends StatelessWidget {
-  final String selectedAttribute; // Seçilen Değerin karşılığı
+  final TextEditingController controller; // Controller eklendi
   final bool isTimeSelected;
   final VoidCallback onTap;
   final String inputText;
@@ -11,7 +11,7 @@ class CustomTextFieldCardWidget extends StatelessWidget {
 
   const CustomTextFieldCardWidget({
     super.key,
-    required this.selectedAttribute,
+    required this.controller, // String yerine controller
     required this.isTimeSelected,
     required this.onTap,
     required this.inputText,
@@ -54,7 +54,8 @@ class CustomTextFieldCardWidget extends StatelessWidget {
                   ),
                   if (isTimeSelected)
                     Text(
-                      selectedAttribute,
+                      controller
+                          .text, // selectedAttribute yerine controller.text
                       style: GoogleFonts.inter(
                         fontWeight: FontWeight.w400,
                         fontSize: 16,

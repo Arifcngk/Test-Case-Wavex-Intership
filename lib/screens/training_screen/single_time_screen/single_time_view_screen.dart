@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:test_case_wavex_intership/global/widgets/custom_button_widget.dart';
 import 'package:test_case_wavex_intership/global/widgets/custom_textfield_card_widget.dart';
+import 'package:test_case_wavex_intership/model/saved_workout_model.dart';
+import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
 import 'package:test_case_wavex_intership/screens/app_bar_global.dart';
 import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart';
 import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
-import 'package:test_case_wavex_intership/screens/training_screen/row_screen/widget/custom_card_widget.dart';
+import 'package:test_case_wavex_intership/screens/training_screen/row_screen/row_view_sceen.dart';
+import 'package:test_case_wavex_intership/screens/training_screen/saved_screen/saved_view_screen.dart';
 
 class SingleTimeViewScreen extends StatefulWidget {
-  const SingleTimeViewScreen({super.key});
+  final WorkoutModel? workout;
+  const SingleTimeViewScreen({super.key, this.workout});
 
   @override
   State<SingleTimeViewScreen> createState() => _SingleTimeViewScreenState();
 }
 
 class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
-  String _selectedTime = ''; // Seçilen zamanı tutacak
-  String _selectedSplitTime = ''; // Seçilen zamanı tutacak
-  String _selectedPace = ''; // Seçilen zamanı tutacak
-  String _selectedStroke = ''; // Seçilen zamanı tutacak
+  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _splitTimeController = TextEditingController();
+  final TextEditingController _paceController = TextEditingController();
+  final TextEditingController _strokeController = TextEditingController();
   bool _isTimeSelected = false;
   bool _isSplitTimeSelected = false;
   bool _isPaceSelected = false;
@@ -30,8 +35,27 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
   final TextEditingController _nameController = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.workout != null) {
+      _timeController.text = widget.workout!.time;
+      _splitTimeController.text = widget.workout!.splitTime;
+      _paceController.text = widget.workout!.pace;
+      _strokeController.text = widget.workout!.strokeRate;
+      _nameController.text = widget.workout!.name;
+      _savedController.value = true;
+    }
+  }
+
+  @override
   void dispose() {
+    _timeController.dispose();
+    _splitTimeController.dispose();
+    _paceController.dispose();
+    _strokeController.dispose();
     _nameController.dispose();
+    _savedController.dispose();
     super.dispose();
   }
 
@@ -40,10 +64,10 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
     DatePickerBdaya.showTimePicker(
       context,
       showTitleActions: true,
-      showSecondsColumn: true, // Saniye sütununu göster
+      showSecondsColumn: true,
       onConfirm: (date) {
         setState(() {
-          _selectedTime = '${date.hour.toString().padLeft(2, '0')}:'
+          _timeController.text = '${date.hour.toString().padLeft(2, '0')}:'
               '${date.minute.toString().padLeft(2, '0')}:'
               '${date.second.toString().padLeft(2, '0')}';
           _isTimeSelected = true;
@@ -53,16 +77,15 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
     );
   }
 
-  //split time methodu herhangi bir işlem yapılmadı tasarımsal olarak görünmesi için yazıldı
   void _showSplitTimePicker(BuildContext context) {
     DateTime now = DateTime.now();
     DatePickerBdaya.showTimePicker(
       context,
       showTitleActions: true,
-      showSecondsColumn: false, // Saniye sütununu gizleyelim
+      showSecondsColumn: false,
       onConfirm: (date) {
         setState(() {
-          _selectedSplitTime = '${date.hour.toString().padLeft(2, '0')}:'
+          _splitTimeController.text = '${date.hour.toString().padLeft(2, '0')}:'
               '${date.minute.toString().padLeft(2, '0')}';
           _isSplitTimeSelected = true;
         });
@@ -71,16 +94,15 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
     );
   }
 
-  //pace  methodu herhangi bir işlem yapılmadı tasarımsal olarak görünmesi için yazıldı
   void _showPacePicker(BuildContext context) {
     DateTime now = DateTime.now();
     DatePickerBdaya.showTimePicker(
       context,
       showTitleActions: true,
-      showSecondsColumn: true, // Saniye sütununu göster
+      showSecondsColumn: true,
       onConfirm: (date) {
         setState(() {
-          _selectedPace = '${date.hour.toString().padLeft(2, '0')}:'
+          _paceController.text = '${date.hour.toString().padLeft(2, '0')}:'
               '${date.minute.toString().padLeft(2, '0')}:'
               '${date.second.toString().padLeft(2, '0')}';
           _isPaceSelected = true;
@@ -90,22 +112,52 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
     );
   }
 
-  //stroke methodu herhangi bir işlem yapılmadı tasarımsal olarak görünmesi için yazıldı
   void _showStrokePicker(BuildContext context) {
     DateTime now = DateTime.now();
     DatePickerBdaya.showTimePicker(
       context,
       showTitleActions: true,
-      showSecondsColumn: true, // Saniye sütununu göster
+      showSecondsColumn: true,
       onConfirm: (date) {
         setState(() {
-          _selectedStroke = '${date.hour.toString().padLeft(2, '0')}'
+          _strokeController.text = '${date.hour.toString().padLeft(2, '0')}'
               '${date.minute.toString().padLeft(2, '0')}';
           _isStrokeSelected = true;
         });
       },
       currentTime: now,
     );
+  }
+
+  void _onSavePressed() {
+    if (_nameController.text.isNotEmpty) {
+      Provider.of<SavedWorkoutProvider>(context, listen: false).addWorkout(
+        name: _nameController.text,
+        time: _timeController.text.isEmpty ? "00:00:00" : _timeController.text,
+        splitTime: _splitTimeController.text.isEmpty
+            ? "00:00"
+            : _splitTimeController.text,
+        pace: _paceController.text.isEmpty ? "00:00:00" : _paceController.text,
+        strokeRate:
+            _strokeController.text.isEmpty ? "0000" : _strokeController.text,
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SavedViewScreen()),
+      );
+    }
+  }
+
+  void _onStartPressed() {
+    if (_timeController.text.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => RowViewSceen(
+                  time: _timeController.text,
+                )),
+      );
+    }
   }
 
   @override
@@ -134,25 +186,22 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //Time Input
               CustomTextFieldCardWidget(
-                inputText: "Time",
-                suffixText: "/500 m",
-                selectedAttribute: _selectedTime,
+                controller: _timeController,
                 isTimeSelected: _isTimeSelected,
                 onTap: () => _showTimePicker(context),
+                inputText: "Time",
+                suffixText: "/500 m",
               ),
               const SizedBox(height: 16),
-              //Split Time Input
               CustomTextFieldCardWidget(
-                inputText: "Split Time",
-                suffixText: "/500 m",
-                selectedAttribute: _selectedSplitTime,
+                controller: _splitTimeController,
                 isTimeSelected: _isSplitTimeSelected,
                 onTap: () => _showSplitTimePicker(context),
+                inputText: "Split Time",
+                suffixText: "/500 m",
               ),
               const SizedBox(height: 16),
-              // Set targets Text
               Text(
                 "Set Targets",
                 textAlign: TextAlign.start,
@@ -163,25 +212,22 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Pace input
               CustomTextFieldCardWidget(
-                inputText: "Pace",
-                suffixText: "/500 m",
-                selectedAttribute: _selectedPace,
+                controller: _paceController,
                 isTimeSelected: _isPaceSelected,
                 onTap: () => _showPacePicker(context),
+                inputText: "Pace",
+                suffixText: "/500 m",
               ),
               const SizedBox(height: 16),
-              // Stroke Rate input
               CustomTextFieldCardWidget(
-                inputText: "Stroke Rate",
-                suffixText: "spm",
-                selectedAttribute: _selectedStroke,
+                controller: _strokeController,
                 isTimeSelected: _isStrokeSelected,
                 onTap: () => _showStrokePicker(context),
+                inputText: "Stroke Rate",
+                suffixText: "spm",
               ),
               const SizedBox(height: 16),
-              // save workout switch button
               SizedBox(
                 width: double.infinity,
                 height: 32,
@@ -207,17 +253,17 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
                       controller: _savedController,
                       activeColor: const Color(0xFFFF8724),
                       inactiveColor: const Color(0xFFB6BECA),
-                      width: 42, // Genişliği küçülttük
-                      height: 24, // Yüksekliği küçülttük
+                      width: 42,
+                      height: 24,
                       thumb: Container(
-                        width: 18, // Dairenin boyutunu küçülttük
+                        width: 18,
                         height: 18,
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -247,11 +293,9 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
                         ? const Color(0xFF001C37)
                         : const Color(0xFFCED3DB),
                     text: 'Save',
-                    onPressed: isSaved
-                        ? () {
-                            // Butona tıklandığında yapılacak işlemler buraya yazılır.
-                          }
-                        : () {}, // Pasif hale getirmek için boş bir fonksiyon verdik.
+                    onPressed: isSaved && _nameController.text.isNotEmpty
+                        ? _onSavePressed
+                        : null,
                   );
                 },
               ),
@@ -264,7 +308,7 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
                 textSize: 16,
                 textColor: Colors.white,
                 text: 'Start',
-                onPressed: () {},
+                onPressed: _onStartPressed,
               ),
             ),
           ],
@@ -296,7 +340,7 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
                       ),
                     ),
                     SizedBox(
-                      width: double.infinity, // Genişliği sınırla
+                      width: double.infinity,
                       height: 18,
                       child: TextField(
                         controller: _nameController,
