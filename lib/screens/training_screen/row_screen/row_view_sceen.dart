@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/row_screen/widget/custom_card_widget.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/training_view_screen.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
 class RowViewSceen extends StatefulWidget {

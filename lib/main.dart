@@ -3,8 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:test_case_wavex_intership/global/theme/app_theme.dart';
 import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
 import 'package:test_case_wavex_intership/screens/bottom_navigator_global.dart';
-import 'package:test_case_wavex_intership/screens/training_screen/row_screen/row_view_sceen.dart';
-import 'package:test_case_wavex_intership/screens/training_screen/single_time_screen/single_time_view_screen.dart';
 
 void main() {
   runApp(

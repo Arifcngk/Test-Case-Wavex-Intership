@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test_case_wavex_intership/model/saved_workout_model.dart';
 
 class SavedWorkoutProvider with ChangeNotifier {
-  List<WorkoutModel> _workouts = [];
+  final List<WorkoutModel> _workouts = [];
 
   List<WorkoutModel> get workouts => _workouts;
 

@@ -6,11 +6,11 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leading;
 
   const GlobalAppBar({
-    Key? key,
+    super.key,
     required this.title,
     this.actions,
     this.leading
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

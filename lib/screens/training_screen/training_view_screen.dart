@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:test_case_wavex_intership/screens/app_bar_global.dart';
+import 'package:test_case_wavex_intership/screens/training_screen/constant_screen/constant_intervals_view_screen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/row_screen/row_view_sceen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/saved_screen/saved_view_screen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/single_time_screen/single_time_view_screen.dart';
+import 'package:test_case_wavex_intership/screens/training_screen/varible_screen/varible_intervals_view_screen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/widget/list_widget.dart';
 
 class TrainingViewScreen extends StatelessWidget {
@@ -75,16 +77,30 @@ class TrainingViewContent extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
-            const ListTileWidget(
+            ListTileWidget(
               title: "Varible Intervals",
               iconName: "sound.png",
-              bgCircleColor: Color.fromRGBO(255, 135, 36, 0.12),
+              bgCircleColor: const Color.fromRGBO(255, 135, 36, 0.12),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const VaribleIntervalsViewScreen(),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 16),
-            const ListTileWidget(
+            ListTileWidget(
               title: "Constant Intervals",
               iconName: "textalign.png",
-              bgCircleColor: Color.fromRGBO(26, 72, 116, 0.12),
+              bgCircleColor: const Color.fromRGBO(26, 72, 116, 0.12),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ConstantIntervalsViewScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),

@@ -11,15 +11,17 @@ import 'package:flutter_advanced_switch/flutter_advanced_switch.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/row_screen/row_view_sceen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/saved_screen/saved_view_screen.dart';
 
-class SingleTimeViewScreen extends StatefulWidget {
+class ConstantIntervalsViewScreen extends StatefulWidget {
   final WorkoutModel? workout;
-  const SingleTimeViewScreen({super.key, this.workout});
+  const ConstantIntervalsViewScreen({super.key, this.workout});
 
   @override
-  State<SingleTimeViewScreen> createState() => _SingleTimeViewScreenState();
+  State<ConstantIntervalsViewScreen> createState() =>
+      _ConstantIntervalsViewScreenState();
 }
 
-class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
+class _ConstantIntervalsViewScreenState
+    extends State<ConstantIntervalsViewScreen> {
   final TextEditingController _timeController = TextEditingController();
   final TextEditingController _splitTimeController = TextEditingController();
   final TextEditingController _paceController = TextEditingController();
@@ -34,9 +36,11 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
   // saved workout switch text controller
   final TextEditingController _nameController = TextEditingController();
 
+  // Time ve Distance seçim durumu
+  bool _isTimeTabSelected = true; // Varsayılan olarak Time seçili
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.workout != null) {
       _timeController.text = widget.workout!.time;
@@ -129,7 +133,6 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
     );
   }
 
-// kullanıcı listeye yönlendirir
   void _onSavePressed() {
     if (_nameController.text.isNotEmpty) {
       final provider =
@@ -146,7 +149,6 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
       );
 
       Future.delayed(Duration.zero, () {
-        // Güncellemenin tamamlanmasını bekler
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const SavedViewScreen()),
@@ -155,7 +157,6 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
     }
   }
 
-// kullanıcıya timer başlangıcı veririr
   void _onStartPressed() {
     if (_timeController.text.isNotEmpty) {
       Navigator.push(
@@ -168,11 +169,118 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
     }
   }
 
+  // Time sekmesi için body içeriği
+  Widget _buildTimeBody() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomTextFieldCardWidget(
+              controller: _timeController,
+              isTimeSelected: _isTimeSelected,
+              onTap: () => _showTimePicker(context),
+              inputText: "Time",
+              suffixText: "/500 m",
+            ),
+            const SizedBox(height: 16),
+            CustomTextFieldCardWidget(
+              controller: _splitTimeController,
+              isTimeSelected: _isSplitTimeSelected,
+              onTap: () => _showSplitTimePicker(context),
+              inputText: "Split Time",
+              suffixText: "/500 m",
+            ),
+            const SizedBox(height: 16),
+            Text(
+              "Set Targets",
+              textAlign: TextAlign.start,
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                color: const Color(0xFF001C37),
+              ),
+            ),
+            const SizedBox(height: 16),
+            CustomTextFieldCardWidget(
+              controller: _paceController,
+              isTimeSelected: _isPaceSelected,
+              onTap: () => _showPacePicker(context),
+              inputText: "Pace",
+              suffixText: "/500 m",
+            ),
+            const SizedBox(height: 16),
+            CustomTextFieldCardWidget(
+              controller: _strokeController,
+              isTimeSelected: _isStrokeSelected,
+              onTap: () => _showStrokePicker(context),
+              inputText: "Stroke Rate",
+              suffixText: "spm",
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              height: 32,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ValueListenableBuilder(
+                    valueListenable: _savedController,
+                    builder: (context, isSavedColor, child) {
+                      return Text(
+                        "Save Workout",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                          color: isSavedColor
+                              ? const Color(0xFFFF8724)
+                              : const Color(0xFF001C37),
+                        ),
+                      );
+                    },
+                  ),
+                  AdvancedSwitch(
+                    controller: _savedController,
+                    activeColor: const Color(0xFFFF8724),
+                    inactiveColor: const Color(0xFFB6BECA),
+                    width: 42,
+                    height: 24,
+                    thumb: Container(
+                      width: 18,
+                      height: 18,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            _savedCustomTextField(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Distance sekmesi için body içeriği
+  Widget _buildDistanceBody() {
+    return const Center(
+      child: Text(
+        "Distance Mode",
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GlobalAppBar(
-        title: "Single Time",
+        title: "Constant Intervals",
         leading: InkWell(
           onTap: () {
             Navigator.of(context).pop();
@@ -188,98 +296,56 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomTextFieldCardWidget(
-                controller: _timeController,
-                isTimeSelected: _isTimeSelected,
-                onTap: () => _showTimePicker(context),
-                inputText: "Time",
-                suffixText: "/500 m",
-              ),
-              const SizedBox(height: 16),
-              CustomTextFieldCardWidget(
-                controller: _splitTimeController,
-                isTimeSelected: _isSplitTimeSelected,
-                onTap: () => _showSplitTimePicker(context),
-                inputText: "Split Time",
-                suffixText: "/500 m",
-              ),
-              const SizedBox(height: 16),
-              Text(
-                "Set Targets",
-                textAlign: TextAlign.start,
-                style: GoogleFonts.inter(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                  color: const Color(0xFF001C37),
+      body: Column(
+        children: [
+          // Time ve Distance butonları
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _isTimeTabSelected = true;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isTimeTabSelected
+                        ? const Color(0xFFFF8724)
+                        : Colors.grey[300],
+                    foregroundColor:
+                        _isTimeTabSelected ? Colors.white : Colors.black,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  child: const Text("Time"),
                 ),
-              ),
-              const SizedBox(height: 16),
-              CustomTextFieldCardWidget(
-                controller: _paceController,
-                isTimeSelected: _isPaceSelected,
-                onTap: () => _showPacePicker(context),
-                inputText: "Pace",
-                suffixText: "/500 m",
-              ),
-              const SizedBox(height: 16),
-              CustomTextFieldCardWidget(
-                controller: _strokeController,
-                isTimeSelected: _isStrokeSelected,
-                onTap: () => _showStrokePicker(context),
-                inputText: "Stroke Rate",
-                suffixText: "spm",
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                height: 32,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ValueListenableBuilder(
-                      valueListenable: _savedController,
-                      builder: (context, isSavedColor, child) {
-                        return Text(
-                          "Save Workout",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                            color: isSavedColor
-                                ? const Color(0xFFFF8724)
-                                : const Color(0xFF001C37),
-                          ),
-                        );
-                      },
-                    ),
-                    AdvancedSwitch(
-                      controller: _savedController,
-                      activeColor: const Color(0xFFFF8724),
-                      inactiveColor: const Color(0xFFB6BECA),
-                      width: 42,
-                      height: 24,
-                      thumb: Container(
-                        width: 18,
-                        height: 18,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                  ],
+                const SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _isTimeTabSelected = false;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isTimeTabSelected
+                        ? Colors.grey[300]
+                        : const Color(0xFFFF8724),
+                    foregroundColor:
+                        _isTimeTabSelected ? Colors.black : Colors.white,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  child: const Text("Distance"),
                 ),
-              ),
-              const SizedBox(height: 16),
-              _savedCustomTextField(),
-            ],
+              ],
+            ),
           ),
-        ),
+          // Dinamik body içeriği
+          Expanded(
+            child: _isTimeTabSelected ? _buildTimeBody() : _buildDistanceBody(),
+          ),
+        ],
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),

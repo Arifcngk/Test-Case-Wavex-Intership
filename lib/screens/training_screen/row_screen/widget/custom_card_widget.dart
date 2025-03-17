@@ -18,7 +18,7 @@ class CustomCardWidget extends StatelessWidget {
   final double sizedBoxHeight;
 
   const CustomCardWidget({
-    Key? key,
+    super.key,
     required this.cardWith,
     required this.cardHeight,
     this.cardColor = const Color(0xFF143A5F),
@@ -30,7 +30,7 @@ class CustomCardWidget extends StatelessWidget {
     required this.titleText,
     required this.subText,
     required this.sizedBoxHeight,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
