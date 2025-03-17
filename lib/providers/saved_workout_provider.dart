@@ -9,9 +9,12 @@ class SavedWorkoutProvider with ChangeNotifier {
   void addWorkout({
     required String name,
     required String time,
-    required String splitTime,
-    required String pace,
-    required String strokeRate,
+    String? splitTime,
+    String? pace,
+    String? strokeRate,
+    String? restTime,
+    String? iconPathName,
+    Color? circleColor ,
   }) {
     final workout = WorkoutModel(
       name: name,
@@ -19,6 +22,10 @@ class SavedWorkoutProvider with ChangeNotifier {
       splitTime: splitTime,
       pace: pace,
       strokeRate: strokeRate,
+      restTime: restTime,
+      iconPathName: iconPathName,
+      circleColor: circleColor,
+      
     );
     _workouts.add(workout);
     notifyListeners(); // Durum değiştiğinde dinleyicilere haber ver

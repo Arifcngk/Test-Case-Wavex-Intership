@@ -39,9 +39,9 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
     super.initState();
     if (widget.workout != null) {
       _timeController.text = widget.workout!.time;
-      _splitTimeController.text = widget.workout!.splitTime;
-      _paceController.text = widget.workout!.pace;
-      _strokeController.text = widget.workout!.strokeRate;
+      _splitTimeController.text = widget.workout!.splitTime!;
+      _paceController.text = widget.workout!.pace!;
+      _strokeController.text = widget.workout!.strokeRate!;
       _nameController.text = widget.workout!.name;
       _savedController.value = true;
     }
@@ -135,6 +135,7 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
           Provider.of<SavedWorkoutProvider>(context, listen: false);
       provider.addWorkout(
         name: _nameController.text,
+        iconPathName: "clock.png",
         time: _timeController.text.isEmpty ? "00:00:00" : _timeController.text,
         splitTime: _splitTimeController.text.isEmpty
             ? "00:00"

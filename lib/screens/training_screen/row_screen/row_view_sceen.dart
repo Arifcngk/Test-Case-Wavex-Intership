@@ -7,8 +7,9 @@ import 'package:flutter/services.dart';
 
 class RowViewSceen extends StatefulWidget {
   final String? time;
+  final String? restTime;
 
-  const RowViewSceen({super.key, this.time});
+  const RowViewSceen({super.key, this.time, this.restTime});
 
   @override
   State<RowViewSceen> createState() => _RowViewSceenState();
@@ -16,15 +17,23 @@ class RowViewSceen extends StatefulWidget {
 
 class _RowViewSceenState extends State<RowViewSceen> {
   late int _second;
+
+  late int _workSeconds;
+  late int _restSeconds;
+
   bool _isTimerPaused = false;
   late Timer _timer;
   bool _isCountingUp = false;
+  bool _isResting = false;
 
   @override
   void initState() {
     super.initState();
-    _second = widget.time != null ? _parseTimeToSeconds(widget.time!) : 0;
-    _isCountingUp = widget.time == null;
+    _workSeconds = widget.time != null ? _parseTimeToSeconds(widget.time!) : 0;
+    _restSeconds =
+        widget.restTime != null ? _parseTimeToSeconds(widget.restTime!) : 0;
+    _second = _workSeconds; // Başlangıçta çalışma süresiyle başla
+    _isCountingUp = widget.time == null && widget.restTime == null;
     _startTimer();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
@@ -35,8 +44,7 @@ class _RowViewSceenState extends State<RowViewSceen> {
   @override
   void dispose() {
     _timer.cancel();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp]); // Eski yönlendirmeyi geri yükle
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.dispose();
   }
 
@@ -59,12 +67,30 @@ class _RowViewSceenState extends State<RowViewSceen> {
             if (_second > 0) {
               _second--;
             } else {
-              _timer.cancel();
+              // Süre bittiğinde çalışma/dinlenme arasında geçiş yap
+              _switchPhase();
             }
           }
         });
       }
     });
+  }
+
+  void _switchPhase() {
+    if (_isResting) {
+      // Eğer dinlenme bitti ise çalışmaya geç
+      _second = _workSeconds;
+      _isResting = false;
+    } else {
+      // Eğer çalışma bitti ise dinlenmeye geç
+      if (_restSeconds > 0) {
+        _second = _restSeconds;
+        _isResting = true;
+      } else {
+        // Eğer dinlenme süresi yoksa tekrar çalışmaya başla
+        _second = _workSeconds;
+      }
+    }
   }
 
   String _formatTimer(int second) {
@@ -83,70 +109,76 @@ class _RowViewSceenState extends State<RowViewSceen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 82, vertical: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Column(
-                  children: [
-                    const Spacer(),
-                    CustomCardWidget(
-                      cardWith: 213,
-                      cardHeight: 88,
-                      cardColor: const Color(0xFFF3F4F6),
-                      textColor: const Color(0xFF143A5F),
-                      textSize: 40,
-                      subTextSize: 16,
-                      textWeight: FontWeight.w500,
-                      subTextWeight: FontWeight.w400,
-                      titleText: _formatTimer(_second),
-                      subText: 'Time',
-                      sizedBoxHeight: 0,
-                    ),
-                    const CustomCardWidget(
-                      cardWith: 213,
-                      cardHeight: 88,
-                      textSize: 40,
-                      textWeight: FontWeight.w500,
-                      titleText: '24',
-                      subText: 'SPM',
-                      sizedBoxHeight: 0,
-                    ),
-                  ],
+                Expanded(
+                  flex: -1,
+                  child: Column(
+                    children: [
+                      const Spacer(),
+                      CustomCardWidget(
+                        cardWith: 213,
+                        cardHeight: 88,
+                        cardColor: const Color(0xFFF3F4F6),
+                        textColor: const Color(0xFF143A5F),
+                        textSize: 40,
+                        subTextSize: 16,
+                        textWeight: FontWeight.w500,
+                        subTextWeight: FontWeight.w400,
+                        titleText: _formatTimer(_second),
+                        subText: 'Time',
+                        sizedBoxHeight: 0,
+                      ),
+                      const CustomCardWidget(
+                        cardWith: 213,
+                        cardHeight: 88,
+                        textSize: 40,
+                        textWeight: FontWeight.w500,
+                        titleText: '24',
+                        subText: 'SPM',
+                        sizedBoxHeight: 0,
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 8),
-                const Column(
-                  children: [
-                    Spacer(),
-                    CustomCardWidget(
-                      cardWith: 460,
-                      cardHeight: 190,
-                      textSize: 96,
-                      textWeight: FontWeight.w500,
-                      titleText: "1500",
-                      subText: "/500 m",
-                      sizedBoxHeight: 2,
-                    ),
-                    Row(
-                      children: [
-                        CustomCardWidget(
-                          cardWith: 226,
-                          cardHeight: 128,
-                          textSize: 48,
-                          titleText: "2:24.9",
-                          subText: "/500 m",
-                          sizedBoxHeight: 2,
-                        ),
-                        SizedBox(width: 8),
-                        CustomCardWidget(
-                          cardWith: 226,
-                          cardHeight: 128,
-                          textSize: 48,
-                          titleText: "2:24.9",
-                          subText: "/500 m",
-                          sizedBoxHeight: 2,
-                        ),
-                      ],
-                    ),
-                  ],
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Spacer(),
+                      CustomCardWidget(
+                        cardWith: 460,
+                        cardHeight: 190,
+                        textSize: 96,
+                        textWeight: FontWeight.w500,
+                        titleText: "1500",
+                        subText: "/500 m",
+                        sizedBoxHeight: 2,
+                      ),
+                      Row(
+                        children: [
+                          CustomCardWidget(
+                            cardWith: 226,
+                            cardHeight: 128,
+                            textSize: 48,
+                            titleText: "2:24.9",
+                            subText: "/500 m",
+                            sizedBoxHeight: 2,
+                          ),
+                          SizedBox(width: 8),
+                          CustomCardWidget(
+                            cardWith: 226,
+                            cardHeight: 128,
+                            textSize: 48,
+                            titleText: "2:24.9",
+                            subText: "/500 m",
+                            sizedBoxHeight: 2,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:test_case_wavex_intership/global/widgets/custom_button_widget.dart';
 import 'package:test_case_wavex_intership/screens/app_bar_global.dart';
-import 'package:test_case_wavex_intership/screens/training_screen/constant_screen/constant_distance_view_screen.dart';
-import 'package:test_case_wavex_intership/screens/training_screen/constant_screen/constant_time_view_screen.dart';
+import 'package:test_case_wavex_intership/screens/training_screen/varible_screen/in_varible_screen/varible_distance_view_screen.dart';
+import 'package:test_case_wavex_intership/screens/training_screen/varible_screen/in_varible_screen/varible_time_view_screen.dart';
 
-class ConstantIntervalsViewScreen extends StatefulWidget {
-  const ConstantIntervalsViewScreen({super.key});
+class VaribleIntervalsAddedViewScreen extends StatefulWidget {
+  const VaribleIntervalsAddedViewScreen({super.key});
 
   @override
-  State<ConstantIntervalsViewScreen> createState() =>
-      _ConstantIntervalsViewScreenState();
+  State<VaribleIntervalsAddedViewScreen> createState() =>
+      _VaribleIntervalsAddedViewScreenState();
 }
 
-class _ConstantIntervalsViewScreenState
-    extends State<ConstantIntervalsViewScreen> {
-  // Kaydedilen verileri tutmak için
-  final _savedController = ValueNotifier<bool>(false);
+class _VaribleIntervalsAddedViewScreenState
+    extends State<VaribleIntervalsAddedViewScreen> {
 
   // Time ve Distance seçim durumu
   bool _isTimeTabSelected = true;
 
   @override
   Widget build(BuildContext context) {
-    dispose() {
-      _savedController.dispose();
-      super.dispose();
-    }
-
     return Scaffold(
       appBar: GlobalAppBar(
-        title: "Constant Intervals",
+        title: " Intervals 1",
         leading: InkWell(
           onTap: () {
             Navigator.of(context).pop();
@@ -56,8 +49,8 @@ class _ConstantIntervalsViewScreenState
           // Seçili olan metoda göre gösterilecek ekran
           Expanded(
             child: _isTimeTabSelected
-                ? const BuildTimeTabScreen()
-                : const BuildDistanceTabScreen(),
+                ? const VaribleTimeScreen()
+                : const VaribleDistanceScreen(),
           ),
         ],
       ),

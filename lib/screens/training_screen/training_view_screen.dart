@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:test_case_wavex_intership/global/widgets/list_widget.dart';
 import 'package:test_case_wavex_intership/screens/app_bar_global.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/constant_screen/constant_intervals_view_screen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/row_screen/row_view_sceen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/saved_screen/saved_view_screen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/single_time_screen/single_time_view_screen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/varible_screen/varible_intervals_view_screen.dart';
-import 'package:test_case_wavex_intership/screens/training_screen/widget/list_widget.dart';
 
 class TrainingViewScreen extends StatelessWidget {
   const TrainingViewScreen({super.key});

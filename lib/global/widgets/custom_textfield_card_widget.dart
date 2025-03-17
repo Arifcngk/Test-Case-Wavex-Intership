@@ -8,6 +8,7 @@ class CustomTextFieldCardWidget extends StatelessWidget {
   final String inputText;
   final String suffixText;
   final double cardHeight;
+  final Color textColor;
 
   const CustomTextFieldCardWidget({
     super.key,
@@ -17,6 +18,7 @@ class CustomTextFieldCardWidget extends StatelessWidget {
     required this.inputText,
     required this.suffixText,
     this.cardHeight = 64,
+    this.textColor = const Color(0xFF001C37),
   });
 
   @override
@@ -46,16 +48,15 @@ class CustomTextFieldCardWidget extends StatelessWidget {
                     inputText,
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w300,
-                      fontSize: 16,
+                      fontSize: 14,
                       height: 16 / 12,
                       letterSpacing: 0,
-                      color: const Color(0xFF001C37),
+                      color: textColor,
                     ),
                   ),
                   if (isTimeSelected)
                     Text(
-                      controller
-                          .text, // selectedAttribute yerine controller.text
+                      controller.text, // Text alanı controller üzerinden alındı
                       style: GoogleFonts.inter(
                         fontWeight: FontWeight.w400,
                         fontSize: 16,

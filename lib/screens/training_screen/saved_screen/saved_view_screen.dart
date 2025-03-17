@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_case_wavex_intership/global/widgets/list_widget.dart';
 import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
 import 'package:test_case_wavex_intership/screens/app_bar_global.dart';
-import 'package:test_case_wavex_intership/screens/training_screen/widget/list_widget.dart';
 
 class SavedViewScreen extends StatelessWidget {
   const SavedViewScreen({super.key});
@@ -48,27 +48,26 @@ class SavedViewScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const ListTileWidget(
-
               title: "Best",
               iconName: "textalign.png",
               iconSize: 18,
               bgCircleColor: Color.fromRGBO(26, 72, 116, 0.12),
-              
             ),
             const SizedBox(height: 16),
-            ...savedWorkouts.map((workout) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: ListTileWidget(
-                    title: workout.name,
-                    iconName: "textalign.png",
-                    iconSize: 18,
-                    bgCircleColor: const Color.fromRGBO(26, 72, 116, 0.12),
-                    onTap: () {
-                      Navigator.pop(context, workout);
-                      
-                    },
-                  ),
-                )),
+            ...savedWorkouts.map(
+              (workout) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: ListTileWidget(
+                  title: workout.name,
+                  iconName: workout.iconPathName ?? 'default_icon.png',
+                  iconSize: 18,
+                  bgCircleColor: const Color.fromRGBO(26, 72, 116, 0.12),
+                  onTap: () {
+                    Navigator.pop(context, workout);
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       ),

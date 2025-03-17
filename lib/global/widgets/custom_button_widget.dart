@@ -18,7 +18,7 @@ class CustomButtonWidget extends StatelessWidget {
     this.width = double.infinity,
     required this.height,
     required this.cardColor,
-    required this.textSize,
+    this.textSize = 16,
     required this.textColor,
     this.borderSide = Colors.transparent,
   });
