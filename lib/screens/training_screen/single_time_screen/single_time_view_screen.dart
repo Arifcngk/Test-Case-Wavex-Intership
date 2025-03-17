@@ -59,20 +59,19 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
   }
 
   void _showTimePicker(BuildContext context) {
-    DateTime now = DateTime.now();
     DatePickerBdaya.showTimePicker(
       context,
       showTitleActions: true,
       showSecondsColumn: true,
       onConfirm: (date) {
         setState(() {
-          _timeController.text = '${date.hour.toString().padLeft(2, '0')}:'
-              '${date.minute.toString().padLeft(2, '0')}:'
-              '${date.second.toString().padLeft(2, '0')}';
+          _timeController.text = date.hour == 0
+              ? '${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}'
+              : '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
           _isTimeSelected = true;
         });
       },
-      currentTime: now,
+      currentTime: DateTime(0, 0, 0, 0, 0),
     );
   }
 
@@ -84,12 +83,13 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
       showSecondsColumn: false,
       onConfirm: (date) {
         setState(() {
-          _splitTimeController.text = '${date.hour.toString().padLeft(2, '0')}:'
-              '${date.minute.toString().padLeft(2, '0')}';
+          _splitTimeController.text = date.hour == 0
+              ? '${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}'
+              : '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
           _isSplitTimeSelected = true;
         });
       },
-      currentTime: now,
+      currentTime: DateTime(0, 0, 0, 0, 0),
     );
   }
 
@@ -107,7 +107,7 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
           _isPaceSelected = true;
         });
       },
-      currentTime: now,
+      currentTime: DateTime(0, 0, 0, 0, 0),
     );
   }
 
@@ -124,7 +124,7 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
           _isStrokeSelected = true;
         });
       },
-      currentTime: now,
+      currentTime: DateTime(0, 0, 0, 0, 0),
     );
   }
 

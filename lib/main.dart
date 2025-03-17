@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_case_wavex_intership/global/theme/app_theme.dart';
 import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
+import 'package:test_case_wavex_intership/screens/bottom_navigator_global.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/varible_screen/varible_intervals_view_screen.dart';
 
 void main() {
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'WaveX Internship',
       theme: buildAppTheme(),
-      home: const VaribleIntervalsViewScreen(),
+      home: const BottomNavigatorGlobal(),
     );
   }
 }
