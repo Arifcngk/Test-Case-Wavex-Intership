@@ -36,7 +36,6 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.workout != null) {
       _timeController.text = widget.workout!.time;

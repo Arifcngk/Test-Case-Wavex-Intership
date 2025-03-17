@@ -23,7 +23,7 @@ class _BottomNavigatorGlobalState extends State<BottomNavigatorGlobal> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      print("Selected Index: $_selectedIndex");
+      // print("Selected Index: $_selectedIndex");
     });
   }
 

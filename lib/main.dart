@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:test_case_wavex_intership/global/theme/app_theme.dart';
 import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
 import 'package:test_case_wavex_intership/screens/bottom_navigator_global.dart';
+import 'package:test_case_wavex_intership/screens/training_screen/constant_screen/constant_intervals_view_screen.dart';
 
 void main() {
   runApp(
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'WaveX Internship',
       theme: buildAppTheme(),
-      home: const BottomNavigatorGlobal(),
+      home: const ConstantIntervalsViewScreen(),
     );
   }
 }
