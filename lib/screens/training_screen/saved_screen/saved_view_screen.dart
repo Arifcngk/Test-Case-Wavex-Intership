@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_case_wavex_intership/global/widgets/list_widget.dart';
+import 'package:test_case_wavex_intership/global/widgets/custum_listTile_widget.dart';
 import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
 import 'package:test_case_wavex_intership/screens/app_bar_global.dart';
+import 'package:test_case_wavex_intership/screens/training_screen/training_view_screen.dart';
 
 class SavedViewScreen extends StatelessWidget {
   const SavedViewScreen({super.key});
@@ -16,7 +17,11 @@ class SavedViewScreen extends StatelessWidget {
         title: "Saved",
         leading: InkWell(
           onTap: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const TrainingViewScreen(),
+              ),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -61,7 +66,7 @@ class SavedViewScreen extends StatelessWidget {
                   title: workout.name,
                   iconName: workout.iconPathName ?? 'default_icon.png',
                   iconSize: 18,
-                  bgCircleColor: const Color.fromRGBO(26, 72, 116, 0.12),
+                  bgCircleColor: workout.circleColor ?? Colors.white30,
                   onTap: () {
                     Navigator.pop(context, workout);
                   },

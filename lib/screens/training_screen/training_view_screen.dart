@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_case_wavex_intership/global/widgets/list_widget.dart';
+import 'package:test_case_wavex_intership/global/widgets/custum_listTile_widget.dart';
 import 'package:test_case_wavex_intership/screens/app_bar_global.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/constant_screen/constant_intervals_view_screen.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/row_screen/row_view_sceen.dart';

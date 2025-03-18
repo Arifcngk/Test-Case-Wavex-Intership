@@ -15,6 +15,7 @@ class SavedWorkoutProvider with ChangeNotifier {
     String? restTime,
     String? iconPathName,
     Color? circleColor ,
+    
   }) {
     final workout = WorkoutModel(
       name: name,

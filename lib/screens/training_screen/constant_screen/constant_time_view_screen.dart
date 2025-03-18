@@ -88,6 +88,7 @@ class _BuildTimeTabScreenState extends State<BuildTimeTabScreen> {
         restTime: _restTimeController.text.isEmpty
             ? "00:00:00"
             : _restTimeController.text,
+        circleColor: const Color.fromRGBO(26, 72, 116, 0.12),
       );
 
       Future.delayed(Duration.zero, () {

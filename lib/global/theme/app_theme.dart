@@ -9,8 +9,8 @@ ThemeData buildAppTheme() {
     colorScheme: const ColorScheme.light(
       primary: Color(0xFFFF9740),
       secondary: Color(0xFF356697),
-      surface: Colors.white, // Yüzey rengi
-      onPrimary: Colors.white, // Primary renk üzerindeki metin rengi
+      surface: Colors.white, 
+      onPrimary: Colors.white, 
       onSecondary: Colors.white,
       onSurface: Color(0xFF8592A6),
     ),

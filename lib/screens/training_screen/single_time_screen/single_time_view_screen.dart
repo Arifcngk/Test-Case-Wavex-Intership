@@ -143,6 +143,7 @@ class _SingleTimeViewScreenState extends State<SingleTimeViewScreen> {
         pace: _paceController.text.isEmpty ? "00:00:00" : _paceController.text,
         strokeRate:
             _strokeController.text.isEmpty ? "0000" : _strokeController.text,
+       circleColor: const Color.fromRGBO(142, 0, 47, 0.12),
       );
 
       Future.delayed(Duration.zero, () {
