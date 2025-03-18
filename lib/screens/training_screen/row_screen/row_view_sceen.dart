@@ -2,25 +2,22 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/row_screen/widget/custom_card_widget.dart';
-import 'package:test_case_wavex_intership/screens/training_screen/training_view_screen.dart';
 import 'package:flutter/services.dart';
 
-class RowViewSceen extends StatefulWidget {
+class RowViewScreen extends StatefulWidget {
   final String? time;
   final String? restTime;
 
-  const RowViewSceen({super.key, this.time, this.restTime});
+  const RowViewScreen({super.key, this.time, this.restTime});
 
   @override
-  State<RowViewSceen> createState() => _RowViewSceenState();
+  State<RowViewScreen> createState() => _RowViewScreenState();
 }
 
-class _RowViewSceenState extends State<RowViewSceen> {
+class _RowViewScreenState extends State<RowViewScreen> {
   late int _second;
-
   late int _workSeconds;
   late int _restSeconds;
-
   bool _isTimerPaused = false;
   late Timer _timer;
   bool _isCountingUp = false;
@@ -32,8 +29,10 @@ class _RowViewSceenState extends State<RowViewSceen> {
     _workSeconds = widget.time != null ? _parseTimeToSeconds(widget.time!) : 0;
     _restSeconds =
         widget.restTime != null ? _parseTimeToSeconds(widget.restTime!) : 0;
-    _second = _workSeconds; // Başlangıçta çalışma süresiyle başla
     _isCountingUp = widget.time == null && widget.restTime == null;
+    _second = _isCountingUp
+        ? 0
+        : _workSeconds; // İleri sayım için 0, geri sayım için workSeconds
     _startTimer();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
@@ -48,13 +47,24 @@ class _RowViewSceenState extends State<RowViewSceen> {
     super.dispose();
   }
 
+  // gelen zamanı parse eden method
   int _parseTimeToSeconds(String time) {
     final parts = time.split(':');
-    if (parts.length != 3) return 0;
-    final hours = int.parse(parts[0]);
-    final minutes = int.parse(parts[1]);
-    final seconds = int.parse(parts[2]);
-    return (hours * 3600) + (minutes * 60) + seconds;
+    if (parts.isEmpty) return 0;
+
+    if (parts.length == 2) {
+      // "MM:SS" formatı
+      final minutes = int.tryParse(parts[0]) ?? 0;
+      final seconds = int.tryParse(parts[1]) ?? 0;
+      return (minutes * 60) + seconds;
+    } else if (parts.length == 3) {
+      // "HH:MM:SS" formatı
+      final hours = int.tryParse(parts[0]) ?? 0;
+      final minutes = int.tryParse(parts[1]) ?? 0;
+      final seconds = int.tryParse(parts[2]) ?? 0;
+      return (hours * 3600) + (minutes * 60) + seconds;
+    }
+    return 0; // Geçersiz format
   }
 
   void _startTimer() {
@@ -63,13 +73,10 @@ class _RowViewSceenState extends State<RowViewSceen> {
         setState(() {
           if (_isCountingUp) {
             _second++;
+          } else if (_second > 0) {
+            _second--;
           } else {
-            if (_second > 0) {
-              _second--;
-            } else {
-              // Süre bittiğinde çalışma/dinlenme arasında geçiş yap
-              _switchPhase();
-            }
+            _switchPhase();
           }
         });
       }
@@ -77,19 +84,18 @@ class _RowViewSceenState extends State<RowViewSceen> {
   }
 
   void _switchPhase() {
+    if (_isCountingUp) return; // İleri sayımda faz değiştirme yok
     if (_isResting) {
-      // Eğer dinlenme bitti ise çalışmaya geç
+      // Dinlenme bitti, çalışmaya geç
       _second = _workSeconds;
       _isResting = false;
+    } else if (_restSeconds > 0) {
+      // Çalışma bitti, dinlenmeye geç
+      _second = _restSeconds;
+      _isResting = true;
     } else {
-      // Eğer çalışma bitti ise dinlenmeye geç
-      if (_restSeconds > 0) {
-        _second = _restSeconds;
-        _isResting = true;
-      } else {
-        // Eğer dinlenme süresi yoksa tekrar çalışmaya başla
-        _second = _workSeconds;
-      }
+      // Dinlenme süresi yoksa çalışmaya geri dön
+      _second = _workSeconds;
     }
   }
 
@@ -111,8 +117,8 @@ class _RowViewSceenState extends State<RowViewSceen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
-                  flex: -1,
+                SizedBox(
+                  width: 213, // Expanded yerine sabit genişlik
                   child: Column(
                     children: [
                       const Spacer(),
@@ -126,7 +132,7 @@ class _RowViewSceenState extends State<RowViewSceen> {
                         textWeight: FontWeight.w500,
                         subTextWeight: FontWeight.w400,
                         titleText: _formatTimer(_second),
-                        subText: 'Time',
+                        subText: _isResting ? 'Rest Time' : 'Time',
                         sizedBoxHeight: 0,
                       ),
                       const CustomCardWidget(
@@ -190,10 +196,7 @@ class _RowViewSceenState extends State<RowViewSceen> {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: () {
-                _pausedButton(context);
-                setState(() {
-                  _isTimerPaused = !_isTimerPaused;
-                });
+                _pausedMethod(context);
               },
               child: CircleAvatar(
                 radius: 28,
@@ -201,7 +204,9 @@ class _RowViewSceenState extends State<RowViewSceen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Image.asset(
-                    'assets/icon/pause.png',
+                    _isTimerPaused
+                        ? 'assets/icon/play.png'
+                        : 'assets/icon/pause.png',
                     width: 24,
                     height: 24,
                     color: const Color(0xFF001C37),
@@ -209,48 +214,70 @@ class _RowViewSceenState extends State<RowViewSceen> {
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
   }
 
-  Future<dynamic> _pausedButton(BuildContext context) {
+  Future<dynamic> _pausedMethod(BuildContext context) {
     return showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          content: Center(
-            child: SizedBox(
-              width: 203,
-              height: 62,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF8724),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const TrainingViewScreen(),
-                  ));
-                },
-                child: Text(
-                  "Save and Exit",
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        content: SizedBox(
+          width: 203,
+          height: 62,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFF8724),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            onPressed: () {
+              _timer.cancel();
+              Navigator.pop(context); // Diyaloğu kapat
+              Navigator.pop(context); // Geri dön
+            },
+            child: Text(
+              "Save and Exit",
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
+    );
+  }
+
+  Widget _pausedButton(BuildContext context) {
+    return SizedBox(
+      width: 203,
+      height: 62,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFFF8724),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        onPressed: () {
+          _timer.cancel();
+          Navigator.pop(context); // Geri dön
+        },
+        child: Text(
+          "Save and Exit",
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ),
     );
   }
 }

@@ -58,7 +58,7 @@ class TrainingViewContent extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     fullscreenDialog: true,
-                    builder: (context) => const RowViewSceen(),
+                    builder: (context) => const RowViewScreen(),
                   ),
                 );
               },

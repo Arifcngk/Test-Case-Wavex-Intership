@@ -4,6 +4,7 @@ import 'package:test_case_wavex_intership/global/widgets/custum_listTile_widget.
 import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
 import 'package:test_case_wavex_intership/providers/varible_workout_provider.dart';
 import 'package:test_case_wavex_intership/screens/app_bar_global.dart';
+import 'package:test_case_wavex_intership/screens/bottom_navigator_global.dart';
 import 'package:test_case_wavex_intership/screens/training_screen/training_view_screen.dart';
 
 class SavedViewScreen extends StatelessWidget {
@@ -21,7 +22,7 @@ class SavedViewScreen extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const TrainingViewScreen()),
+              MaterialPageRoute(builder: (_) => const BottomNavigatorGlobal()),
             );
           },
           child: Padding(

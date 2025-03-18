@@ -104,10 +104,12 @@ class _BuildTimeTabScreenState extends State<BuildTimeTabScreen> {
   // kullanıcıya timer başlangıcı veririr
   void _onStartPressed() {
     if (_timeController.text.isNotEmpty) {
+      print("Time: ${_timeController.text}");
+      print("Rest Time: ${_restTimeController.text}");
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => RowViewSceen(
+            builder: (context) => RowViewScreen(
                   time: _timeController.text,
                   restTime: _restTimeController.text,
                 )),
