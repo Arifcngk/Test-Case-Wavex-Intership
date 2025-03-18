@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_case_wavex_intership/global/theme/app_theme.dart';
 import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
+import 'package:test_case_wavex_intership/providers/varible_workout_provider.dart';
 import 'package:test_case_wavex_intership/screens/bottom_navigator_global.dart';
 
 void main() {
@@ -9,6 +10,8 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SavedWorkoutProvider()),
+        ChangeNotifierProvider(
+            create: (_) => WorkoutIntervalProvider()), // Yeni Provider Eklendi
       ],
       child: const MyApp(),
     ),

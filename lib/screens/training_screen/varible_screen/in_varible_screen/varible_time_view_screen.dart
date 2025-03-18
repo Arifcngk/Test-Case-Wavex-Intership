@@ -3,9 +3,6 @@ import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_case_wavex_intership/global/widgets/custom_button_widget.dart';
 import 'package:test_case_wavex_intership/global/widgets/custom_textfield_card_widget.dart';
-import 'package:test_case_wavex_intership/providers/saved_workout_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:test_case_wavex_intership/screens/training_screen/varible_screen/varible_intervals_view_screen.dart';
 
 class VaribleTimeScreen extends StatefulWidget {
   const VaribleTimeScreen({super.key});
@@ -22,21 +19,12 @@ class _VaribleTimeScreenState extends State<VaribleTimeScreen> {
   bool _isTimeSelected = false;
   bool _isRestTimeSelected = false;
 
-  // saved workout switch button controller
-  final _savedController = ValueNotifier<bool>(false);
-  // saved workout switch text controller
-  final TextEditingController _nameController = TextEditingController();
-
-  // Time ve Distance seçim durumu
-
   @override
   void dispose() {
     _timeController.dispose();
     _restTimeController.dispose();
     _paceController.dispose();
     _strokeController.dispose();
-    _nameController.dispose();
-    _savedController.dispose();
     super.dispose();
   }
 
@@ -74,23 +62,20 @@ class _VaribleTimeScreenState extends State<VaribleTimeScreen> {
     );
   }
 
-// listeye ekleme metodu
+  // Listeye ekleme metodu (geri döndürme)
   void _onSavePressed() {
-    final provider = Provider.of<SavedWorkoutProvider>(context, listen: false);
-    provider.addWorkout(
-      name: _nameController.text,
-      iconPathName: "textalign.png",
-      time: _timeController.text.isEmpty ? "00:00" : _timeController.text,
-      restTime:
-          _restTimeController.text.isEmpty ? "00:00" : _restTimeController.text,
-    );
-
-    Future.delayed(Duration.zero, () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const VaribleIntervalsViewScreen()),
+    if (_timeController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a time")),
       );
+      return;
+    }
+
+    // Verileri Map olarak geri döndür
+    Navigator.pop(context, {
+      'time': _timeController.text,
+      'restTime':
+          _restTimeController.text.isEmpty ? "00:00" : _restTimeController.text,
     });
   }
 
@@ -157,7 +142,7 @@ class _VaribleTimeScreenState extends State<VaribleTimeScreen> {
                   suffixText: "spm",
                   textColor: const Color(0xFF8592A6),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 80), // Bottom button için yer açma
               ],
             ),
           ),
@@ -166,25 +151,22 @@ class _VaribleTimeScreenState extends State<VaribleTimeScreen> {
           bottom: 0,
           left: 0,
           right: 0,
-          child:
-              _bottomSave(), // Butonlar ekranın en altında sabitlenmiş durumda.
+          child: _bottomSave(),
         ),
       ],
     );
   }
 
-  Padding _bottomSave() {
+  Widget _bottomSave() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Expanded(
-        child: CustomButtonWidget(
-          cardColor: const Color(0xFF8592A6),
-          height: 56,
-          textSize: 16,
-          textColor: const Color(0xFFCED3DB),
-          text: 'Save',
-          onPressed: _onSavePressed,
-        ),
+      child: CustomButtonWidget(
+        cardColor: const Color(0xFF8592A6),
+        height: 56,
+        textSize: 16,
+        textColor: Colors.white,
+        text: 'Save',
+        onPressed: _onSavePressed,
       ),
     );
   }

@@ -7,5 +7,6 @@ class WorkoutInterval {
     required this.name,
     required this.times,
     required this.restTimes,
+    
   });
 }
