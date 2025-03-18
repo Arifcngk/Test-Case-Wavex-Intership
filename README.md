@@ -60,8 +60,6 @@ flutter run
 - ReorderableListView: Drag-and-drop functionality for Variable Intervals.
 - flutter_advanced_switch: Custom toggle switch for "Save Workout" feature
   
-## Ekran Görüntüleri
 
-![Uygulama Ekran Görüntüsü](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
   
